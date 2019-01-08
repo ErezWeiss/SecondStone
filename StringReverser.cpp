@@ -5,12 +5,10 @@
 #include "StringReverser.h"
 #include<algorithm>
 
-StringReverser::StringReverser(String problem, String solution){
-    this->problem=problem;
-    this->solution=solution;
+string StringReverser::solve(string problem) {
+    string rev = problem;
+    reverse(rev.begin(), rev.end());
+    return rev;
 }
 
-string StringReverser::Solve(){
-    this->solution=reverse(this->problem.begin(),this->problem.end());
-}
 
