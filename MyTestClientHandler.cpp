@@ -1,4 +1,9 @@
 //
-// Created by user on 1/7/2019.
+// Created by erez on 1/9/19.
 //
 
+#include "MyTestClientHandler.h"
+
+void MyTestClientHandler::handClient(int InputSocket, int OutputSocket){
+
+}

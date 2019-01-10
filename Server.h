@@ -7,16 +7,17 @@
 
 #include <string>
 #include <vector>
+#include "ClientHandler.h"
 
 using namespace std;
 class Server {
 protected:
     vector<string> params;
 public:
-//    virtual int execute() = 0;
-//    virtual void setPlaneData(PlaneData * planeData){
-//        this->planeData = planeData;
-//    }
+    // opening the server and listening on this port
+    virtual void open (int port, ClientHandler c) = 0;
+    // closing the server
+    virtual  void stop() = 0;
 };
 
 #endif //SECONDSTONE_SERVER_H

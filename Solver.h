@@ -13,6 +13,7 @@ class Solver {
 protected:
     vector<string> params;
 public:
+    Solution solve(Problem problem);
 };
 
 #endif //SECONDSTONE_SOLVER_H
