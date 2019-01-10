@@ -15,7 +15,7 @@ protected:
     vector<string> params;
 public:
     // opening the server and listening on this port
-    virtual void open (int port, ClientHandler c) = 0;
+    virtual void open (int port, ClientHandler * c) = 0;
     // closing the server
     virtual  void stop() = 0;
 };

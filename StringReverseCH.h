@@ -15,8 +15,7 @@ class StringReverseCH : public ClientHandler {
     Solver<string, string> *solver;
 public:
     StringReverseCH();
-
-    void handleClient(int socket)override;
+    virtual void handleClient(int socket);
 };
 
 

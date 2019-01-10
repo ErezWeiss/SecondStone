@@ -5,10 +5,10 @@
 #ifndef SECONDSTONE_CLIENTHANDLER_H
 #define SECONDSTONE_CLIENTHANDLER_H
 
-
 class ClientHandler {
+
 public:
-     void virtual handClient(int InputSocket, int OutputSocket) = 0;
+    virtual void handleClient(int Socket) = 0;
 };
 
 

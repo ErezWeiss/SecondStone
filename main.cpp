@@ -1,17 +1,18 @@
 #include <iostream>
 #include "MyParallelServer.h"
-#include <>
-#include "MyTestClientHandler.h"
+#include "MyClientHandler.h"
 //using namespace boot;
 
-
+bool stop = false;
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::cout << "Main begins" << std::endl;
 
     Server *myParallelServer = new MyParallelServer;
-    ClientHandler *yossi = new MyTestClientHandler();
-    myParallelServer->open(5050, yossi);
+    ClientHandler *myClientHandler = new MyClientHandler();
+    myParallelServer->open(8080, myClientHandler);
+    while(1){
 
+    }
     return 0;
 }
 

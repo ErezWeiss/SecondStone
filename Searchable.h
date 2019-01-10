@@ -7,8 +7,9 @@
 
 using namespace std;
 class Searchable {
-protected:
-
 public:
+//    State getInitialState() = 0;
+//    State getGoalState() = 0;
+//    List<State> getAllPossibleStates(State s) = 0;
 };
 #endif //SECONDSTONE_SEARCHABLE_H

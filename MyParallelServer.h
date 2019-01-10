@@ -13,7 +13,7 @@
 
 using namespace std;
 
-bool stop = false;
+//bool stop = false;
 
 struct arg_struct {
     int newSocket;
@@ -23,8 +23,8 @@ struct arg_struct {
 class MyParallelServer : public Server {
 
 public:
-    void open (int port, ClientHandler c);
-    void stop();
+    virtual void open (int port, ClientHandler * c);
+    virtual void stop();
 };
 
 #endif //SECONDSTONE_MYPARALLELSERVER_H

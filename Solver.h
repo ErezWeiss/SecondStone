@@ -7,13 +7,14 @@
 
 
 #include <vector>
+#include <string>
 
 using namespace std;
+template <class P, class S>
+
 class Solver {
-protected:
-    vector<string> params;
 public:
-    Solution solve(Problem problem);
+    virtual S solve(P p) = 0;
 };
 
 #endif //SECONDSTONE_SOLVER_H

@@ -5,7 +5,18 @@
 #include <zconf.h>
 #include <cstring>
 #include <netinet/in.h>
+#include <iostream>
 #include "MyParallelServer.h"
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<string.h>
+#include <arpa/inet.h>
+#include <fcntl.h> // for open
+#include <unistd.h> // for close
+#include<pthread.h>
+extern bool stop;
 
 char client_message[2000];
 char buffer[1024];
@@ -17,25 +28,20 @@ void* socketThread(void *arg)
     int newSocket = arg_struct1.newSocket;
     ClientHandler* clientHandler = arg_struct1.clientHandler;
 
-    recv(newSocket , client_message , 2000 , 0);
-    // Send message to the client socket
-    pthread_mutex_lock(&lock);
-    char *message = malloc(sizeof(client_message)+20);
-    strcpy(message,"Hello Client : ");
-    strcat(message,client_message);
-    strcat(message,"\n");
-    strcpy(buffer,message);
-    free(message);
-    pthread_mutex_unlock(&lock);
-    sleep(1);
-    send(newSocket,buffer,13,0);
+//    recv(newSocket , client_message , 2000 , 0);
+//     Send message to the client socket
+//    pthread_mutex_lock(&lock);
+    clientHandler->handleClient(newSocket);
+//    pthread_mutex_unlock(&lock);
+
+//    send(newSocket,buffer,13,0);
     printf("Exit socketThread \n");
     close(newSocket);
     pthread_exit(NULL);
 }
 
-void MasterOfThreads (int port, ClientHandler c){
-            ClientHandler clientHandler = c;
+void MasterOfThreads (int port, ClientHandler *c){
+            ClientHandler *clientHandler = c;
             int serverSocket, newSocket;
             struct sockaddr_in serverAddr;
             struct sockaddr_storage serverStorage;
@@ -65,12 +71,12 @@ void MasterOfThreads (int port, ClientHandler c){
                 //Accept call creates a new socket for the incoming connection
                 addr_size = sizeof serverStorage;
                 arg_struct arg_struct1;
-                arg_struct1.newSocket=addr_size;
-                arg_struct1.clientHandler=&clientHandler;
-                newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &arg_struct1);
+                newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);
+                arg_struct1.newSocket=newSocket;
+                arg_struct1.clientHandler=clientHandler;
                 //for each client request creates a thread and assign the client request to it to process
                 //so the main thread can entertain next request
-                if( pthread_create(&tid[i], NULL, socketThread, &newSocket) != 0 )
+                if(pthread_create(&tid[i], NULL, socketThread, &arg_struct1) != 0 )
                     printf("Failed to create thread\n");
                 if( i >= 50)
                 {
@@ -84,11 +90,11 @@ void MasterOfThreads (int port, ClientHandler c){
             }
 }
 
-void MyParallelServer::open (int port, ClientHandler c){
+void MyParallelServer::open (int port, ClientHandler * c){
     std::thread th1(MasterOfThreads, port, c);
+    th1.join();
 }
 
 void MyParallelServer::stop(){
     ::stop = true;
-}
 };

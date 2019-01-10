@@ -20,7 +20,11 @@
 
 
 #define END "end"
-pthread_mutex_t lock;
+//pthread_mutex_t lock;
+
+StringReverseCH::StringReverseCH() {
+    this->solver = new StringReverser();
+}
 
 void StringReverseCH::handleClient(int new_socket) {
     //TO DO : WHAT IS THE SIZE OF INPUT?
@@ -44,7 +48,5 @@ void StringReverseCH::handleClient(int new_socket) {
     }
 }
 
-StringReverseCH::StringReverseCH() {
-    this->solver = new StringReverser();
-}
+
 //
