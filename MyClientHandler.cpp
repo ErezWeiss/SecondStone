@@ -57,5 +57,6 @@ void MyClientHandler::handleClient(int new_socket) {
     lines.push_back(buffer);
 
     for (auto i = lines.begin(); i != lines.end(); ++i)
-        std::cout << *i << ' ';
+        std::cout << *i << ' ' << endl;
+
 }
