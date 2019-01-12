@@ -14,4 +14,3 @@ public:
     int getNumberOfNodesEvaluated() = 0;
 
 };
-#endif //SECONDSTONE_SEARCHER_H
