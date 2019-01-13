@@ -5,11 +5,14 @@
 #ifndef SECONDSTONE_SEARCHABLE_H
 #define SECONDSTONE_SEARCHABLE_H
 
-using namespace std;
+#include "State.h"
+#include <list>
+
+template <class A>
 class Searchable {
 public:
-//    State getInitialState() = 0;
-//    State getGoalState() = 0;
-//    List<State> getAllPossibleStates(State s) = 0;
+    virtual A getInitialState() = 0;
+    virtual A getGoalState() = 0;
+    virtual std::list<A> getAllPossibleStates(A s) = 0;
 };
 #endif //SECONDSTONE_SEARCHABLE_H

@@ -13,16 +13,14 @@
 #include <iostream>
 #include <mutex>
 #include <cstring>
+#include <sys/socket.h>
 #include "MyClientHandler.h"
+#include "SearcherAdapter.h"
 
 #define END "end"
 
-//MyClientHandler::MyClientHandler(){
-//    this->solver = new SearcherAdapter<string>(//searcher//);
-//}
 
 void MyClientHandler::handleClient(int new_socket) {
-    Matrix *matrix = new Matrix;
     std::vector<std::string> lines;
 
     //TO DO : WHAT IS THE SIZE OF INPUT?
@@ -40,23 +38,21 @@ void MyClientHandler::handleClient(int new_socket) {
         }
         lines.push_back(buffer);
         str = buffer;
-////        string retStReverse = this->solver->solve(buffer);
-////        send(new_socket, ret, retStReverse.size(), 0);
-//
-    }
-    check = read(new_socket, buffer, 5000);
-    if (check < 0) {
-        perror("cannot read from client");
-    }
-    lines.push_back(buffer);
 
-    check = read(new_socket, buffer, 5000);
-    if (check < 0) {
-        perror("cannot read from client");
     }
-    lines.push_back(buffer);
+
 
     for (auto i = lines.begin(); i != lines.end(); ++i)
-        std::cout << *i << ' ' << endl;
+        std::cout << *i << ' ' << "myclienthandler "<< endl;
+
+    SearcherAdapter<string> *searcherAdapter = new SearcherAdapter<string>(*searcher, lines);
+    //TODO
+    //add CONT args:
+    // searcher and lines
+    // i didnt use the solver for now. problem of pointers...
+//    Solver<Searchable, string> *solver1 = searcherAdapter;
+//    this->solver = solver1;
+    std::string returnAnswer = searcherAdapter->solve(searcherAdapter->getSearchableMatrix());
+    send(new_socket, returnAnswer.c_str(), returnAnswer.size(), 0);
 
 }

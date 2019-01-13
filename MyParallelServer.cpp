@@ -17,7 +17,7 @@
 #include <unistd.h> // for close
 #include<pthread.h>
 extern bool stop;
-
+int serverSocketEX;
 char client_message[2000];
 char buffer[1024];
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -27,20 +27,14 @@ void* socketThread(void *arg)
     arg_struct arg_struct1 = *((arg_struct *)arg);
     int newSocket = arg_struct1.newSocket;
     ClientHandler* clientHandler = arg_struct1.clientHandler;
-
-//    recv(newSocket , client_message , 2000 , 0);
-//     Send message to the client socket
-//    pthread_mutex_lock(&lock);
     clientHandler->handleClient(newSocket);
-//    pthread_mutex_unlock(&lock);
-
-//    send(newSocket,buffer,13,0);
     printf("Exit socketThread \n");
     close(newSocket);
     pthread_exit(NULL);
 }
 
 void MasterOfThreads (int port, ClientHandler *c){
+            bool secondTime = false;
             ClientHandler *clientHandler = c;
             int serverSocket, newSocket;
             struct sockaddr_in serverAddr;
@@ -48,6 +42,7 @@ void MasterOfThreads (int port, ClientHandler *c){
             socklen_t addr_size;
             //Create the socket.
             serverSocket = socket(PF_INET, SOCK_STREAM, 0);
+            serverSocketEX=serverSocket;
             // Configure settings of the server address struct
             // Address family = Internet
             serverAddr.sin_family = AF_INET;
@@ -71,7 +66,27 @@ void MasterOfThreads (int port, ClientHandler *c){
                 //Accept call creates a new socket for the incoming connection
                 addr_size = sizeof serverStorage;
                 arg_struct arg_struct1;
+
+
+                if (secondTime){
+                    timeval timeout;
+                    timeout.tv_sec = 10;
+                    timeout.tv_usec = 0;
+                    setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+                }
+
+
                 newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);
+                if (newSocket < 0)	{
+                    if (errno == EWOULDBLOCK)	{
+                        cout << "timeout!" << endl;
+                        exit(2);
+                    }	else	{
+                        perror("other error");
+                        exit(3);
+                    }
+                }
+                secondTime=true;
                 arg_struct1.newSocket=newSocket;
                 arg_struct1.clientHandler=clientHandler;
                 //for each client request creates a thread and assign the client request to it to process
@@ -97,4 +112,5 @@ void MyParallelServer::open (int port, ClientHandler * c){
 
 void MyParallelServer::stop(){
     ::stop = true;
+    close(serverSocketEX);
 };

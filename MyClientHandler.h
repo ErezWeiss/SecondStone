@@ -9,14 +9,16 @@
 #include "ClientHandler.h"
 #include "Matrix.h"
 #include "Solver.h"
+#include "MatrixBuilder.h"
 
 class MyClientHandler : public ClientHandler {
 private:
-    Solver<string, Matrix> *solver;
+    Solver<Searchable, string> *solver;
+
 public:
-//    MyClientHandler();
     virtual void handleClient(int socket);
 };
+// TODO: close the socket
 
 
 #endif //SECONDSTONE_MYCLIENTHANDLER_H

@@ -6,15 +6,14 @@
 #define SECONDSTONE_MATRIXBUILDER_H
 
 
-class MatrixBuilder {
-
 #include "SearchableMatrix.h"
+#include "Point.h"
 
-    class MatrixBuilder{
+class MatrixBuilder{
     public:
-        SearchableMatrix& create(vector<vector<double > >&matrix,Point initial,Point goal);
+        SearchableMatrix& create(vector<vector<double>> &matrix,Point initial,Point goal);
     };
-};
+
 
 
 #endif //SECONDSTONE_MATRIXBUILDER_H

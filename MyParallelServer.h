@@ -21,7 +21,6 @@ struct arg_struct {
 };
 
 class MyParallelServer : public Server {
-
 public:
     virtual void open (int port, ClientHandler * c);
     virtual void stop();

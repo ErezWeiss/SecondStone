@@ -9,21 +9,28 @@
 #include <vector>
 #include "Searchable.h"
 #include "State.h"
+#include "Point.h"
 
-class SearchableMatrix : Searchable {
+class SearchableMatrix : Searchable<State<Point>> {
+
 private:
-    vector<vector<State<Point>>> matrixVector;
+    std::vector<std::vector<State<Point>>> matrixVector;
     State<Point> initial;
     State<Point> goal;
 
 public:
     // CONT
-    SearchableMatrix(vector<vector<State<Point>>> matrixVector, State<Point> initial, State<Point> goal){
+    SearchableMatrix(std::vector<std::vector<State<Point>>> matrixVector, State<Point> initial, State<Point> goal) {
         this->matrixVector = matrixVector;
-        this-> initial = initial;
-        this-> goal =goal;
+        this->initial = initial;
+        this->goal = goal;
     }
-}
+
+    virtual State<Point> getInitialState();
+    virtual State<Point> getGoalState();
+    virtual std::list<State<Point>> getAllPossibleStates(State<Point> s);
+};
+
 
 
 #endif //SECONDSTONE_SEARCHABLEMATRIX_H
