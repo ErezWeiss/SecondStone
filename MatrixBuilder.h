@@ -11,7 +11,7 @@
 
 class MatrixBuilder{
     public:
-        SearchableMatrix& create(vector<vector<double>> &matrix,Point initial,Point goal);
+        SearchableMatrix& create(std::vector<std::vector<double>> &matrix,Point initial,Point goal);
     };
 
 

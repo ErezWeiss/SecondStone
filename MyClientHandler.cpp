@@ -23,7 +23,7 @@
 void MyClientHandler::handleClient(int new_socket) {
     std::vector<std::string> lines;
 
-    //TO DO : WHAT IS THE SIZE OF INPUT?
+    //TODO : WHAT IS THE SIZE OF INPUT?
     char buffer[5000];
     int check = 0;
     int natalie = 0;

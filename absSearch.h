@@ -1,45 +1,84 @@
 //
 // Created by user on 1/12/2019.
 //
-
 #ifndef SECONDSTONE_ABSSEARCH_H
 #define SECONDSTONE_ABSSEARCH_H
-
-#include <string>
 #include "Searcher.h"
 #include "State.h"
 #include "MatrixBuilder.h"
+#include "MyPriorityQueue.h"
+#include <map>
+#include <bits/unordered_map.h>
+#include <queue>
+#include <algorithm>
+//#include <w32api/d2d1helper.h>
+#include "Searcher.h"
+#include "Point.h"
 
-class absSearch : public Searcher
+
+
+enum color {WHITE ,GRAY , BLACK };
+
+class myComparator
 {
-private:
-    MyPriorityQueue<State> openList;
-    int evaluated Nodes;
-
-
-
-protected:
-State popOpenList(){
-    evaluatedNodes++;
-    return openList.poll();
-}
-// a property of openList
 public:
-    absSearch(){
-        openList=newMyPriorityQueue<State>();
-        evaluatedNodes=0;
+    int operator() (const State<Point>* p1, const State<Point>* p2)
+    {
+        return p1->getPathCost() > p2->getPathCost();
+        //TODO getPathCost (IN STATE)
     }
-    int OpenListSize{
-        // it is a read-only property :)
-        get{ returnopenList.Count; }
-}
-// ISearcher’smethods:
-public int getNumberOfNodesEvaluated(){
-    return evaluatedNodes;
-}
-public Solution search(ISearchable searchable);
-
 };
-#endif //SECONDSTONE_ABSSEARCH_H
 
-//get the vector from user. add a VectorMakerFromString and add a Matrixbuilder!
+
+class absSearch : public Searcher<State<Point>>{
+protected:
+    //std::map<State<T>,color> visited;
+    std::unordered_map<State<Point>*, color> visited;
+    std::priority_queue<State<Point>*,std::vector<State<Point>*>,myComparator> open ;
+    int evaluatedNodes=0;
+public:
+    void initialization (std::vector< vector<State<Point>*>> vvi){
+        for(auto& row:vvi){
+            for(auto& col:row){
+                this->visited[col] = WHITE;
+            }
+        }
+//        vector<State<Point>*> >::iterator row;
+//        vector<State<Point>*>::iterator col;
+//        for (row = vvi.begin(); row != vvi.end(); row++) {
+//            for (col = row->begin(); col != row->end(); col++) {
+//                this->visited[col] = WHITE;
+//            }
+//        }
+    }
+
+
+    State<Point>* popOpenList(){
+        evaluatedNodes++;
+        State<Point>* temp=open.top();
+        this->visited.at(temp) = BLACK;
+        open.pop();
+        return temp;
+    }
+    bool contain(State<Point>* state)
+    {
+        if(this->visited[state]==GRAY){
+            return true;
+        }
+        else{
+            return false;
+        }
+//        //check if element is in the queue.
+//        auto it = std::find(this->open.begin(), this->open.end(), state);
+//        return (it != this->open.end());
+    }
+    void remove(State<Point>* stateToRemove);
+
+    // a property of openList
+    int OpenListSize;
+    // ISearcher’smethods:
+    int getNumberOfNodesEvaluated();
+    string search(Searchable searchable);
+};
+
+#endif //SECONDSTONE_ABSSEARCH

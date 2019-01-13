@@ -5,29 +5,48 @@
 
 #ifndef SECONDSTONE_BFS_H
 #define SECONDSTONE_BFS_H
-public override Solution search(Isearchablesearchable) {
-    // Searcher's abstract method
-    overriding addToOpenList(searchable.getInitialState());
-    // inherited from Searcher
-    HashSet<State> closed = newHashSet<State>();
-    while(OpenListSize> 0) {
-        Staten = popOpenList();
-        // inherited from Searcher, removes the best state
-        closed.Add(n);
-        if(n.Equals(searchable.getIGoallState()))
-            returnbackTrace();
-        // private method, back traces through the parents
-        // calling the delegated method, returns a list of states with n as a parent
-        List<State> succerssors= searchable.getAllPossibleStates(n);
-        for each(States insuccerssors){
-            if(!closed.Contains(s) && !openContaines(s)){
-               // s.setCameFrom(n);// already done by getSuccessors
-               addToOpenList(s);
-            }
-            else
-                {//...
-            }
-        }
+class MyBFS : public absSearch<std::string, Node*, std::string>
+{
+    unsigned int visits;
+
+    virtual void increaseNumOfVisits(){ ++(this->visits); }
+
+public:
+    MyBFS(){ this->visits = 0; };
+    virtual std::string search(Searchable<std::string, state<T>* mg);
+    virtual unsigned int getNumOfVisits() { return this->visits; };
+    virtual ~MyBFS(){};
+};
+//
+//public BFS : public absSearch{
+//public override Solution search(Isearchablesearchable) {
+//    // Searcher's abstract method
+//    overriding addToOpenList(searchable.getInitialState());
+//    // inherited from Searcher
+//    HashSet<State> closed = newHashSet<State>();
+//    while(OpenListSize> 0) {
+//            Staten = popOpenList();
+//            // inherited from Searcher, removes the best state
+//            closed.Add(n);
+//            if (n.Equals(searchable.getIGoallState()))
+//                returnbackTrace();
+//            // private method, back traces through the parents
+//            // calling the delegated method, returns a list of states with n as a parent
+//            List <State> succerssors = searchable.getAllPossibleStates(n);
+//            for each(States insuccerssors){
+//                if (!closed.Contains(s) && !openContaines(s)) {
+//                    // s.setCameFrom(n);// already done by getSuccessors
+//                    this->addToOpenList(s);
+//                } else if(distance < son->getAlgCost()){
+//                    son->setAlgCost(distance);
+//                    this->removeFromQueue(son);
+//                   //when node enters to priority queue it updates the heap
+//                   this->addToQueue(son);
+//                }
+//            }
+//        }
+//}
+//};
 
 
 #endif //SECONDSTONE_BFS_H

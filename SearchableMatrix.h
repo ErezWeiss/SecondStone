@@ -14,20 +14,20 @@
 class SearchableMatrix : Searchable<State<Point>> {
 
 private:
-    std::vector<std::vector<State<Point>>> matrixVector;
-    State<Point> initial;
-    State<Point> goal;
+    std::vector<std::vector<State<Point>*>> matrixVector;
+    State<Point>* initial;
+    State<Point>* goal;
 
 public:
     // CONT
-    SearchableMatrix(std::vector<std::vector<State<Point>>> matrixVector, State<Point> initial, State<Point> goal) {
+    SearchableMatrix(std::vector<std::vector<State<Point>*>> matrixVector, State<Point>* initial, State<Point>* goal) {
         this->matrixVector = matrixVector;
         this->initial = initial;
         this->goal = goal;
     }
 
-    virtual State<Point> getInitialState();
-    virtual State<Point> getGoalState();
+    virtual State<Point>* getInitialState();
+    virtual State<Point>* getGoalState();
     virtual std::list<State<Point>> getAllPossibleStates(State<Point> s);
 };
 

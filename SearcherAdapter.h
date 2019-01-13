@@ -13,9 +13,9 @@
 #include "VectorMakerFromStrings.h"
 #include "MatrixBuilder.h"
 
-template <class S>
+template <class P, class S>
 
-class SearcherAdapter : public Solver<Searchable, S> {
+class SearcherAdapter : public Solver<Searchable<P>, S> {
 private:
     Searcher<S> *searcher;
     SearchableMatrix searchableMatrix;
@@ -41,7 +41,7 @@ public:
         return searchableMatrix;
     }
 
-    virtual S solve(Searchable searchable){
+    virtual S solve(Searchable<P> searchable){
         return searcher->search(searchable);
     }
 };
