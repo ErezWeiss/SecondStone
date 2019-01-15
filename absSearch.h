@@ -53,13 +53,14 @@ public:
     }
 
 
-    State<Point>* popOpenList(){
-        evaluatedNodes++;
-        State<Point>* temp=open.top();
-        this->visited.at(temp) = BLACK;
-        open.pop();
-        return temp;
-    }
+    virtual State<Point>* extractMin()=0;
+//    {
+//        evaluatedNodes++;
+//        State<Point>* temp=open.top();
+//        this->visited.at(temp) = BLACK;
+//        open.pop();
+//        return temp;
+//   }
     bool contain(State<Point>* state)
     {
         if(this->visited[state]==GRAY){
@@ -72,13 +73,13 @@ public:
 //        auto it = std::find(this->open.begin(), this->open.end(), state);
 //        return (it != this->open.end());
     }
-    void remove(State<Point>* stateToRemove);
+    virtual void remove(State<Point>* stateToRemove)=0;
 
     // a property of openList
-    int OpenListSize;
+    virtual int OpenListSize;
     // ISearcher’smethods:
-    int getNumberOfNodesEvaluated();
-    string search(Searchable searchable);
+    virtual int getNumberOfNodesEvaluated()=0;
+    virtual string search(Searchable searchable)=0;
 };
 
-#endif //SECONDSTONE_ABSSEARCH
+#endif //SECONDSTONE_ABSSEARCH_H

@@ -7,6 +7,7 @@
 
 #include "MyPriorityQueue.h"
 #include "absSearch.h"
+#include "Searchable.h"
 
 
 class BestFirstSearch : public absSearch {
@@ -18,14 +19,14 @@ private:
 
 
 public:
-    void increaseNumOfVisits(){ ++(this->visits); }
+    void increaseNumOfVisits(){ ++(this->evaluatedNodes); }
     void addToQueue(State<Point>* state);
-    int OpenListSize;
+    int OpenListSize();
     void remove(State<Point>* state);
 //    virtual bool isContain(State<T>* state);
     State<Point>* extractMin();
     BestFirstSearch(){ this->visits = 0; };
-    std::string search(Searchable);
+    std::string search(Searchable<State<Point>*>);
     unsigned int getNumOfVisits() { return this->visits; };
     ~BestFirstSearch(){};
 };

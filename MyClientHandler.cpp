@@ -2,8 +2,6 @@
 // Created by erez on 1/10/19.
 //
 
-
-
 #include <zconf.h>
 #include <cstdio>
 #include "Matrix.h"
@@ -18,7 +16,6 @@
 #include "SearcherAdapter.h"
 
 #define END "end"
-
 
 void MyClientHandler::handleClient(int new_socket) {
     std::vector<std::string> lines;
@@ -38,7 +35,6 @@ void MyClientHandler::handleClient(int new_socket) {
         }
         lines.push_back(buffer);
         str = buffer;
-
     }
 
 
