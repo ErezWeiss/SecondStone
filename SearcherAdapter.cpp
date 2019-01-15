@@ -4,6 +4,6 @@
 //#include "SearcherAdapter.h"
 
 
-//T SearcherAdapter::solve(P p){
+//T SearcherAdapter::solve(F p){
 //
 //}

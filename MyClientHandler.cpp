@@ -4,7 +4,6 @@
 
 #include <zconf.h>
 #include <cstdio>
-#include "Matrix.h"
 #include <vector>
 #include <string>
 #include <strings.h>
@@ -14,41 +13,43 @@
 #include <sys/socket.h>
 #include "MyClientHandler.h"
 #include "SearcherAdapter.h"
+#include "BestFirstSearch.h"
 
-#define END "end"
 
 void MyClientHandler::handleClient(int new_socket) {
     std::vector<std::string> lines;
 
-    //TODO : WHAT IS THE SIZE OF INPUT?
     char buffer[5000];
-    int check = 0;
+    ssize_t check = 0;
     int natalie = 0;
     std::string str;
     //reads from client as long as input is not stop
-    while (strcmp(buffer, END)!=0) {
+//
+
+    while (str.find("end")==string::npos) {
 //        pthread_mutex_lock(&lock);
         bzero(buffer, sizeof(str));
         check = read(new_socket, buffer, 5000);
         if (check < 0) {
             perror("cannot read from client");
         }
-        lines.push_back(buffer);
         str = buffer;
+        lines.push_back(str);
+        cout<< "got input from client:" << str;
     }
 
 
-    for (auto i = lines.begin(); i != lines.end(); ++i)
-        std::cout << *i << ' ' << "myclienthandler "<< endl;
+    auto mySearcher = new BestFirstSearch<Point, string>();
+    auto searcherAdapter = new SearcherAdapter<Searchable<Point>, std::string, Point>(mySearcher, lines);
 
-    SearcherAdapter<string> *searcherAdapter = new SearcherAdapter<string>(*searcher, lines);
-    //TODO
-    //add CONT args:
-    // searcher and lines
-    // i didnt use the solver for now. problem of pointers...
-//    Solver<Searchable, string> *solver1 = searcherAdapter;
-//    this->solver = solver1;
-    std::string returnAnswer = searcherAdapter->solve(searcherAdapter->getSearchableMatrix());
+//    //add CONT args:
+//    // searcher and lines
+//    // i didnt use the solver for now. problem of pointers...
+    this->solver = searcherAdapter;
+    Searchable<Point> *searchable = searcherAdapter->getSearchableMatrix();
+////    std::string returnAnswer = this->solver->solve(searcherAdapter->getSearchableMatrix());
+    std::string returnAnswer = solver->Solve(searchable);
+//
     send(new_socket, returnAnswer.c_str(), returnAnswer.size(), 0);
-
+    close(new_socket);
 }

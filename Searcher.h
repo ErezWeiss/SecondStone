@@ -6,13 +6,14 @@
 #define SECONDSTONE_SEARCHER_H
 
 #include "Searchable.h"
+#include "SearchableMatrix.h"
+
 using namespace std;
 template <class T, class P>
 class Searcher {
 public:
-    T search (Searchable<P> searchable) = 0;
-    int getNumberOfNodesEvaluated() = 0;
-
+    virtual P search (Searchable<T> *searchable) = 0;
+    virtual int getNumberOfNodesEvaluated() = 0;
 };
 
 #endif //SECONDSTONE_SEARCHER_H

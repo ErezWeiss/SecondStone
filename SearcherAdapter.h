@@ -13,16 +13,17 @@
 #include "VectorMakerFromStrings.h"
 #include "MatrixBuilder.h"
 
-template <class P, class S>
-
-class SearcherAdapter : public Solver<Searchable<P>, S> {
+template <class P, class S, class G>
+//P=Searchable<State<Point>*>
+//S=std::string
+//G=Point
+class SearcherAdapter : public Solver<P, S> {
 private:
-    Searcher<S> *searcher;
-    SearchableMatrix searchableMatrix;
+    Searcher<G, S> *searcher;
+    SearchableMatrix<G> *searchableMatrix = nullptr;
 
-private:
-    SearchableMatrix FromLinesToMatrix(std::vector<std::string> lines){
-        VectorMakerFromStrings vectorMakerFromStrings(lines);
+    SearchableMatrix<G>* FromLinesToMatrix(std::vector<S> lines){
+        VectorMakerFromStrings<S> vectorMakerFromStrings(lines);
         std::vector<std::vector<double>> vector1 = vectorMakerFromStrings.GetVector();
         MatrixBuilder matrixBuilder;
         return matrixBuilder.create(        vector1,
@@ -32,16 +33,16 @@ private:
 
 public:
     // CONT
-    SearcherAdapter(Searcher<S> *searcher, std::vector<std::string> &lines){
+    SearcherAdapter(Searcher<G, S> *searcher, std::vector<S> lines){
         this->searcher=searcher;
         this->searchableMatrix = FromLinesToMatrix(lines);
     }
 
-    const SearchableMatrix &getSearchableMatrix() const {
+    SearchableMatrix<G>* getSearchableMatrix()  {
         return searchableMatrix;
     }
 
-    virtual S solve(Searchable<P> searchable){
+    virtual S Solve(P *searchable){
         return searcher->search(searchable);
     }
 };

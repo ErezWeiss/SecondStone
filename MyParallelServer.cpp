@@ -18,6 +18,7 @@
 #include<pthread.h>
 extern bool stop;
 int serverSocketEX;
+int countCurrentThreads;
 char client_message[2000];
 char buffer[1024];
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
@@ -28,6 +29,8 @@ void* socketThread(void *arg)
     int newSocket = arg_struct1.newSocket;
     ClientHandler* clientHandler = arg_struct1.clientHandler;
     clientHandler->handleClient(newSocket);
+
+    countCurrentThreads--;
     printf("Exit socketThread \n");
     close(newSocket);
     pthread_exit(NULL);
@@ -60,47 +63,53 @@ void MasterOfThreads (int port, ClientHandler *c){
             else
                 printf("Error\n");
             pthread_t tid[60];
-            int i = 0;
-            while(!::stop)
-            {
+
+
+            timeval timeout;
+            timeout.tv_sec = 100;
+            timeout.tv_usec = 0;
+            setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
+
+            while(!::stop) {
                 //Accept call creates a new socket for the incoming connection
                 addr_size = sizeof serverStorage;
-                arg_struct arg_struct1;
 
 
-                if (secondTime){
-                    timeval timeout;
-                    timeout.tv_sec = 10;
-                    timeout.tv_usec = 0;
-                    setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
-                }
+
+
 
 
                 newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);
                 if (newSocket < 0)	{
                     if (errno == EWOULDBLOCK)	{
                         cout << "timeout!" << endl;
-                        exit(2);
+                        while(countCurrentThreads != 0)
+                        {
+                            pthread_join(tid[countCurrentThreads],NULL);
+                            countCurrentThreads--;
+                        }
+                        break;
                     }	else	{
                         perror("other error");
                         exit(3);
                     }
                 }
-                secondTime=true;
-                arg_struct1.newSocket=newSocket;
-                arg_struct1.clientHandler=clientHandler;
+                countCurrentThreads++;
+                auto arg_struct1 = new arg_struct();
+                arg_struct1->newSocket=newSocket;
+                arg_struct1->clientHandler=clientHandler;
                 //for each client request creates a thread and assign the client request to it to process
                 //so the main thread can entertain next request
-                if(pthread_create(&tid[i], NULL, socketThread, &arg_struct1) != 0 )
+                if(pthread_create(&tid[countCurrentThreads], NULL, socketThread, arg_struct1) != 0 )
                     printf("Failed to create thread\n");
-                if( i >= 50)
+                if( countCurrentThreads >= 50)
                 {
-                    i = 0;
-                    while(i < 50)
+                    countCurrentThreads = 0;
+                    while(countCurrentThreads < 50)
                     {
-                        pthread_join(tid[i++],NULL);
+                        pthread_join(tid[countCurrentThreads++],NULL);
                     }
-                    i = 0;
+                    countCurrentThreads = 0;
                 }
             }
 }

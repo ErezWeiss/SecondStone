@@ -14,7 +14,7 @@ template <class P, class S>
 
 class Solver {
 public:
-    virtual S solve(P p) = 0;
+    virtual S Solve(P *p) = 0;
 };
 
 #endif //SECONDSTONE_SOLVER_H

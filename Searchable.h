@@ -8,11 +8,12 @@
 #include "State.h"
 #include <list>
 
-template <class A>
+template <class T>
 class Searchable {
 public:
-    virtual A getInitialState() = 0;
-    virtual A getGoalState() = 0;
-    virtual std::list<A> getAllPossibleStates(A s) = 0;
+    virtual State<T>* getInitialState() = 0;
+    virtual State<T>* getGoalState() = 0;
+    virtual std::list<State<T>*> getAllPossibleStates(State<T>* s) = 0;
+    virtual std::vector<std::vector<State<T>*>> getVector()=0;
 };
 #endif //SECONDSTONE_SEARCHABLE_H

@@ -6,13 +6,13 @@
 
 
 
-SearchableMatrix &MatrixBuilder::create(std::vector<std::vector<double> > &matrix, Point initial, Point goal) {
-    int i, j = 0;
+SearchableMatrix<Point>* MatrixBuilder::create(std::vector<std::vector<double> > &matrix, Point *initial, Point *goal) {
+    int i=0, j = 0;
     std::vector<std::vector<double> > initial_matrix = matrix;
-    double goal_cost = initial_matrix[goal.getX()][goal.getY()];
-    State<Point> *goalState = new State<Point>(&goal, goal_cost);;
-    double init_cost = initial_matrix[initial.getX()][initial.getY()];
-    State<Point> *innitialState = new State<Point>(&initial, init_cost);
+    double goal_cost = initial_matrix[goal->getX()][goal->getY()];
+    State<Point> *goalState = new State<Point>(goal, goal_cost);;
+    double init_cost = initial_matrix[initial->getX()][initial->getY()];
+    State<Point> *innitialState = new State<Point>(initial, init_cost);
     std::vector<std::vector<State<Point> *>> searchable;
     std::vector<State<Point> *> temp;
     State<Point> *s;
@@ -31,6 +31,6 @@ SearchableMatrix &MatrixBuilder::create(std::vector<std::vector<double> > &matri
         i++;
     }
     //TODO DELETE MEMORY
-    SearchableMatrix *searchableMatrix = new SearchableMatrix(searchable, innitialState, goalState);
-    return *searchableMatrix;
+    SearchableMatrix<Point> *searchableMatrix = new SearchableMatrix<Point>(searchable, innitialState, goalState);
+    return searchableMatrix;
 }

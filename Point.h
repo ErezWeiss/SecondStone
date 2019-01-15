@@ -13,35 +13,28 @@ private:
 
 public:
     // CONT
-    Point(double x, double y){
+    Point(double x, double y) {
         this->x = x;
-        this-> y = y;
+        this->y = y;
     }
 
-    void setX(double x);
 
-    void setY(double y);
+    void setX(double x) {
+        this->x = x;
+    }
 
-    double getX() const;
+    double getX() const {
+        return x;
+    }
 
-    double getY() const;
+    double getY() const {
+        return y;
+    }
+
+    void setY(double y) {
+        this->y = y;
+    }
 };
-
-void Point::setX(double x) {
-    Point::x = x;
-}
-
-double Point::getX() const {
-    return x;
-}
-
-double Point::getY() const {
-    return y;
-}
-
-void Point::setY(double y) {
-    Point::y = y;
-}
 
 
 #endif //SECONDSTONE_POINT_H

@@ -7,13 +7,12 @@
 
 
 #include "ClientHandler.h"
-#include "Matrix.h"
 #include "Solver.h"
 #include "MatrixBuilder.h"
 
 class MyClientHandler : public ClientHandler {
 private:
-    Solver<Searchable, string> *solver;
+    Solver<Searchable<Point>, std::string> *solver;
 
 public:
     virtual void handleClient(int socket);

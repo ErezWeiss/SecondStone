@@ -10,9 +10,9 @@ int main() {
     std::cout << "Main begins" << std::endl;
 
     Server *myParallelServer = new MyParallelServer;
-    ClientHandler *myClientHandler = new MyClientHandler<string>;
+    auto myClientHandler = new MyClientHandler;
 
-    myParallelServer->open(8080, myClientHandler);
+    myParallelServer->open(5408, myClientHandler);
 
     while(1){
 
