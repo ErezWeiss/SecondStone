@@ -73,12 +73,6 @@ void MasterOfThreads (int port, ClientHandler *c){
             while(!::stop) {
                 //Accept call creates a new socket for the incoming connection
                 addr_size = sizeof serverStorage;
-
-
-
-
-
-
                 newSocket = accept(serverSocket, (struct sockaddr *) &serverStorage, &addr_size);
                 if (newSocket < 0)	{
                     if (errno == EWOULDBLOCK)	{

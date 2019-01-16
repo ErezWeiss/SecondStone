@@ -58,8 +58,8 @@ public:
     bool ifIsEquals(State <T>* s) {
         return (this->state == s->state);
     }
-    std::string pathFromStart()
-    {
+
+    std::string pathFromStart() {
         std::string toRet = "";
         State<Point>* curr = this->cameFrom;
         unsigned int i = 0;

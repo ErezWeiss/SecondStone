@@ -11,12 +11,12 @@ template <class T, class P>
 class BestFirstSearch : public absSearch<T, P> {
 
 private:
-    unsigned int visits;
+//    unsigned int visits;
     int evaluatedNodes;
 
 public:
     BestFirstSearch(){
-        this->visits = 0;
+//        this->visits = 0;
         evaluatedNodes=0;
     };
 
@@ -44,50 +44,49 @@ public:
         return toPop;
     }
 
-
     P search(Searchable<T> *searchable){    //we use set to mark our used Nodes.
         this->initialization(searchable->getVector());
         State<T>* start = searchable->getInitialState();
         //set the source destination.
-        start->setSumOfVertex(0);
-        addToQueue(searchable->getInitialState());
+        start->setSumOfVertex(start->getCost());
+        addToQueue(start);
         while (this->OpenListSize() > 0) //continue until there is no nodes left,we will check all the nodes eventually.
         {
-            State<T>* current = extractMin();
+            State<T> *current = extractMin();
             this->visited[current] = BLACK;
+            this->evaluatedNodes++;
 //        closedMap.insert(current);
-            if (current == searchable->getGoalState())
-            { //case we find our goal.
+            if (current->ifIsEquals(searchable->getGoalState())) { //case we find our goal.
                 return current->pathFromStart();
             }
-            list<State<T>*> adj = searchable->getAllPossibleStates(current); //extract neighbors.
-            for(auto& son : adj)
-            {
+            list<State<T> *> adj = searchable->getAllPossibleStates(current); //extract neighbors.
+            for (auto &son : adj) {
+                if (son->getCost() == -1) {
+                    continue;
+                }
+
                 double distance = current->getSumOfVertex() + son->getCost();
                 //check if not in the queue and not handled.
-                if ((  this->visited[son] != BLACK) && !(this->visited[son] != GRAY)) {
+                if ((this->visited[son] == WHITE)) {
                     //set the path and the previous node in this path.
+                    this->visited[son] = GRAY;
                     son->setSumOfVertex(distance);
                     son->setCameFrom(current);
                     this->addToQueue(son);
-                    this->visited[son] = GRAY;
-                }
-                else if(distance < son->getSumOfVertex()) {
-                    if (this->visited[son] != GRAY) { //check if the queue contains the node.
-                        this->addToQueue(son);
+                } else if (distance < (son->getSumOfVertex())) {
+                    son->setCameFrom(current);
+                    son->setSumOfVertex(distance);
+                    if (this->visited[son] == BLACK) { //check if the queue contains the node.
                         this->visited[son] = GRAY;
-                    } else {
-                        son->setSumOfVertex(distance);
-                        this->remove(son);
-                        //when node enters to priority queue it updates the heap
                         this->addToQueue(son);
                     }
                 }
             }
         }
 
-        return ("-1") ;}
-    int getNumberOfNodesEvaluated(){ return this->visits; };
+        return ("-1");
+    }
+    int getNumberOfNodesEvaluated(){ return this->evaluatedNodes; };
 };
 
 #endif //SECONDSTONE_BESTFIRSTSEARCH_H

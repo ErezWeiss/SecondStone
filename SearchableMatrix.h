@@ -41,7 +41,7 @@ public:
         double y = s->getState()->getY();
 
         // bottom right
-        if (x==y==sizeOfMatrix){
+        if ((x==y) && (y==sizeOfMatrix)){
             retList.push_back(this->matrixVector[x][y-1]);
             retList.push_back(this->matrixVector[x-1][y]);
         }
@@ -56,7 +56,7 @@ public:
             retList.push_back(this->matrixVector[1][sizeOfMatrix]);
         }
             // up left
-        else if (x==y==0) {
+        else if ((x==y) && (y==0)) {
             retList.push_back(this->matrixVector[0][1]);
             retList.push_back(this->matrixVector[1][0]);
         }

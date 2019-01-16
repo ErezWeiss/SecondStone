@@ -27,7 +27,7 @@ public:
 };
 
 template <class T, class P>
-// T string, P State<Point>*
+// T Point, P String
 
 class absSearch : public Searcher<T, P>{
 protected:
