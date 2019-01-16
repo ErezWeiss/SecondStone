@@ -16,6 +16,7 @@ private:
 
 public:
     virtual void handleClient(int socket);
+    virtual ClientHandler* DuplicateCH();
 };
 // TODO: close the socket
 

@@ -9,6 +9,7 @@ class ClientHandler {
 
 public:
     virtual void handleClient(int Socket) = 0;
+    virtual ClientHandler* DuplicateCH()=0;
 };
 
 

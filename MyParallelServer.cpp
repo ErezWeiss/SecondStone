@@ -23,16 +23,17 @@ char client_message[2000];
 char buffer[1024];
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
-void* socketThread(void *arg)
-{
+void* socketThread(void *arg) {
     arg_struct arg_struct1 = *((arg_struct *)arg);
     int newSocket = arg_struct1.newSocket;
+    cout<< "thread"<<arg_struct1.newSocket<< "opened" <<endl;
     ClientHandler* clientHandler = arg_struct1.clientHandler;
     clientHandler->handleClient(newSocket);
-
     countCurrentThreads--;
-    printf("Exit socketThread \n");
+    printf("Exit socketThread\n");
     close(newSocket);
+    cout << "thread" << newSocket << "closed"<<endl;
+//    delete clientHandler;
     pthread_exit(NULL);
 }
 
@@ -85,13 +86,14 @@ void MasterOfThreads (int port, ClientHandler *c){
                         break;
                     }	else	{
                         perror("other error");
-                        exit(3);
+                        break;
                     }
                 }
                 countCurrentThreads++;
-                auto arg_struct1 = new arg_struct();
+                arg_struct *arg_struct1 = new arg_struct();
                 arg_struct1->newSocket=newSocket;
-                arg_struct1->clientHandler=clientHandler;
+                ClientHandler *ch = clientHandler->DuplicateCH();
+                arg_struct1->clientHandler=ch;
                 //for each client request creates a thread and assign the client request to it to process
                 //so the main thread can entertain next request
                 if(pthread_create(&tid[countCurrentThreads], NULL, socketThread, arg_struct1) != 0 )

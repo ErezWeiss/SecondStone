@@ -50,6 +50,8 @@ public:
         //set the source destination.
         start->setSumOfVertex(start->getCost());
         addToQueue(start);
+
+
         while (this->OpenListSize() > 0) //continue until there is no nodes left,we will check all the nodes eventually.
         {
             State<T> *current = extractMin();

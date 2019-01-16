@@ -6,6 +6,7 @@
 #define SECONDSTONE_VECTORMAKERFROMSTRINGS_H
 
 #include <vector>
+#include <iostream>
 #include <string>
 #include <sstream>
 #include "Point.h"
@@ -13,41 +14,44 @@
 template <class S>
 class VectorMakerFromStrings {
 private:
-    std::vector<S> input;
-    std::vector<std::string> rows;
+    std::vector<S> rows;
+//    std::vector<std::string> rows;
 
 public:
     VectorMakerFromStrings(std::vector<S> &input){
-        this->input=input;
-        this->Init();
+        this->rows=input;
+//        this->Init();
     }
 
-    void Init(){
-        std::vector<std::string> rows1;
-        std::stringstream ss(input[0]);
-        std::string to;
-        while(std::getline(ss,to,'\n')){
-            rows1.push_back(to);
-        }
-        this->rows=rows1;
-    }
+//    void Init(){
+////        std::vector<std::string> rows1;
+////        std::stringstream ss(input[0]);
+////        std::string to;
+////        while(std::getline(ss,to,'\n')){
+////            rows1.push_back(to);
+////            std::cout<<
+////        }
+//        this->rows=input;
+//    }
 
     std::vector<std::vector<double>> GetVector(){
         std::vector<std::vector<double>> mainVector;
         double num;
 
+
+        /// cannot access to secnod line and above
         for(auto t=rows.begin(); t!=rows.end()-3; ++t){
             std::vector<double> row;
             std::string line = *t;
             std::stringstream ss(line);
             while (ss >> num) {
+                std::cout << "hiiii"<< num<<"iiiiiiiiiiiii"<<std::endl;
                 row.push_back(num);
                 if (ss.peek() == ',')
                     ss.ignore();
             }
             mainVector.push_back(row);
         }
-
         return mainVector;
     }
     Point *GetInit(){

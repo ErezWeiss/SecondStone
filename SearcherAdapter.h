@@ -12,6 +12,7 @@
 #include "SearchableMatrix.h"
 #include "VectorMakerFromStrings.h"
 #include "MatrixBuilder.h"
+#include <iostream>
 
 template <class P, class S, class G>
 //P=Searchable<State<Point>*>
