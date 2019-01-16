@@ -1,79 +1,79 @@
 //
 // Created by user on 1/8/2019.
 //
-
-
+#ifndef SECONDSTONE_BFS_H
+#define SECONDSTONE_BFS_H
 #include <string>
+#include "absSearch.h"
+#include "Searchable.h"
 
-//helper functions for BestFirstSearch.
-void BFS::addToQueue(State<Point>* state)
-{
-    this->open.push(state);
-}
-int BFS:: OpenListSize()
-{
-    return this->open.size();
-}
-void BFS:: remove(State<Point>* state)
-{
-    //remove element from the queue and fix the order using heapify.
-    if (this->visited[state]==GRAY) {
-        State<Point> *temp = this->open.top();
-        this->visited[temp] = BLACK;
+template <class T, class P>
+class BFS : public absSearch<T, P> {
+    private:
+        int evaluatedNodes;
+    queue<State<T>*>  open1;
+    public:
+        BFS(){
+            evaluatedNodes=0;
+        };
+
+    void increaseNumOfVisits(){ ++(this->evaluatedNodes); }
+
+    //helper functions for BestFirstSearch.
+    void addToQueue(State<T>* state) {
+            this->open1.push(state);
+        }
+
+    int OpenListSize() {
+        return this->open1.size();
     }
-}
-//void remove(State<Point>* stateToRemove) {
-//    //remove element from the queue and fix the order using heapify.
-//    if (contain(stateToRemove)) {
-//        this->open.delete(stateToRemove);
-//    }
-//}
-State<Point>* BFS:: extractMin()
-{ //takes out the best node from the graph, in our case the node with the best cost.
-    this->increaseNumOfVisits();
-    State<Point>* toPop = this->open.top();
-    this->visited.at(toPop) = BLACK;
-    this->open.pop();
-    return toPop;
-}
-std BFS::string search(Searchable<State<Point>*>* searchable)
-{
 
-//queue and a set for the nodes.
-//    std::queue<Node*> queue;
-//    std::unordered_set <Node*> handled;
-this->initialization(searchable);
-this->opene.push(searchable->getInitialState());
-this->visited.insert(searchable->getInitialState());
-this->visited[state]=GRAY;
-this->visits = 0;
-while (!this->open.empty())
-{
-State<Point>* current = this->open.top();
-this->increaseNumOfVisits();
-this->open.pop();
-if (current->equals(searchable->getGoalState()))
-{ //case we find our node.
-this->visits = 0;
-while (this->open.size() > 0)
-{
-this->open.pop();
-}
-return current->pathFromStart();
-}
-vector<State<Point>*> adj = searchable->getAllPossibleStates(current) //extract neighbors.
-for (State<Point>* son : adj)
-{
-if (this->visited.find(son) == this->visited.end() )
-{
-//set the node as handled and set the path.
-son->setCameFrom(current);
-this->visited.insert(son);
-this->visited[state]=GRAY;
-this->open.push(son);
-}
-}
-}
-this->visits = 0;
-return ("-1"); // in case our node was not found.
-}
+    void remove(State<T>* state) {
+        //remove element from the queue and fix the order using heapify.
+        if (this->visited[state]==GRAY) {
+            State<T> *temp = this->open1.front();
+            this->visited[temp] = BLACK;
+        }
+    }
+
+    State<T>* extractMin() { //takes out the best node from the graph, in our case the node with the best cost.
+        this->increaseNumOfVisits();
+        State<T>* toPop = this->open1.front();
+        this->visited.at(toPop) = BLACK;
+        this->open1.pop();
+        return toPop;
+    }
+
+    P search(Searchable<T>* searchable) {
+        this->initialization(searchable->getVector());
+        this->open1.push(searchable->getInitialState());
+        this->visited[searchable->getInitialState()];
+        this->visited[searchable->getInitialState()]=GRAY;
+        while (!this->open1.empty()) {
+            State<T>* current = this->open1.front();
+            this->increaseNumOfVisits();
+            this->open1.pop();
+            if (current->ifIsEquals(searchable->getGoalState())) { //case we find our node.
+                this->evaluatedNodes = 0;
+                while (this->open1.size() > 0) {
+                    this->open1.pop();
+                }
+                return current->pathFromStart();
+            }
+            list<State<T>*> adj = searchable->getAllPossibleStates(current); //extract neighbors.
+            for (State<T>* son : adj) {
+                if (this->visited[son] == WHITE ) {
+                    //set the node as handled and set the path.
+                    son->setCameFrom(current);
+                    this->visited[son]=GRAY;
+                    this->open1.push(son);
+                }
+            }
+        }
+        this->evaluatedNodes = 0;
+        return ("-1"); // in case our node was not found.
+    }
+    int getNumberOfNodesEvaluated(){ return this->evaluatedNodes; };
+};
+
+#endif

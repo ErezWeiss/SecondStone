@@ -34,8 +34,8 @@ public:
     State<T>* getGoalState(){
         return this->goal;
     }
-    std::list<State<T>*> getAllPossibleStates(State<Point> *s){
-        std::list<State<Point>*> retList;
+    std::list<State<T>*> getAllPossibleStates(State<T> *s){
+        std::list<State<T>*> retList;
         unsigned long sizeOfMatrix = this->matrixVector.size()-1;
         double x = s->getState()->getX();
         double y = s->getState()->getY();

@@ -45,7 +45,6 @@ public:
             std::string line = *t;
             std::stringstream ss(line);
             while (ss >> num) {
-                std::cout << "hiiii"<< num<<"iiiiiiiiiiiii"<<std::endl;
                 row.push_back(num);
                 if (ss.peek() == ',')
                     ss.ignore();

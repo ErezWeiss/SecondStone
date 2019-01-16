@@ -9,12 +9,15 @@
 #include "ClientHandler.h"
 #include "Solver.h"
 #include "MatrixBuilder.h"
+#include "CacheManager.h"
 
 class MyClientHandler : public ClientHandler {
 private:
     Solver<Searchable<Point>, std::string> *solver;
+    CacheManager<string, string> *cacheManager;
 
 public:
+    MyClientHandler(CacheManager<string, string> *cacheManager);
     virtual void handleClient(int socket);
     virtual ClientHandler* DuplicateCH();
 };

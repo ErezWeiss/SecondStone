@@ -1,92 +1,80 @@
 //
 // Created by user on 1/8/2019.
-//https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/
-//to be complete..
-
+//
 #ifndef SECONDSTONE_DFS_H
 #define SECONDSTONE_DFS_H
+#include <string>
+#include <stack>
+#include "absSearch.h"
+#include "Searchable.h"
 
-#include<iostream>
-#include<list>
-using namespace std;
+template <class T, class P>
+class DFS : public absSearch<T, P> {
+    private:
+        int evaluatedNodes;
+          stack<State<T>*>  open1;
+    public:
+        DFS(){
+            evaluatedNodes=0;
+        };
 
-// Graph class represents a directed graph
-// using adjacency list representation
-class Graph
-{
-    int V;    // No. of vertices
+    void increaseNumOfVisits(){ ++(this->evaluatedNodes); }
 
-    // Pointer to an array containing
-    // adjacency lists
-    list<int> *adj;
-
-    // A recursive function used by DFS
-    void DFSUtil(int v, bool visited[]);
-public:
-    Graph(int V);   // Constructor
-
-    // function to add an edge to graph
-    void addEdge(int v, int w);
-
-    // DFS traversal of the vertices
-    // reachable from v
-    void DFS(int v);
+    //helper functions for BestFirstSearch.
+    void addToQueue(State<T>* state) {
+            this->open1.push(state);
+        }
+        
+    int OpenListSize() {
+        return this->open1.size();
+    }
+    
+    void remove(State<T>* state) {
+        //remove element from the queue and fix the order using heapify.
+        if (this->visited[state]==GRAY) {
+            State<T> *temp = this->open1.top();
+            this->visited[temp] = BLACK;
+        }
+    }
+   
+    State<T>* extractMin() { //takes out the best node from the graph, in our case the node with the best cost.
+        this->increaseNumOfVisits();
+        State<T>* toPop = this->open1.top();
+        this->visited.at(toPop) = BLACK;
+        this->open1.pop();
+        return toPop;
+    }
+    
+    P search(Searchable<T>* searchable) {
+        this->initialization(searchable->getVector());
+        this->open1.push(searchable->getInitialState());
+        this->visited[searchable->getInitialState()];
+        this->visited[searchable->getInitialState()]=GRAY;
+        while (!this->open1.empty()) {
+            State<T>* current = this->open1.top();
+            this->increaseNumOfVisits();
+            this->open1.pop();
+            if (current->ifIsEquals(searchable->getGoalState())) { //case we find our node.
+                this->evaluatedNodes = 0;
+                while (this->open1.size() > 0) {
+                    this->open1.pop();
+                }
+                return current->pathFromStart();
+            }
+            list<State<T>*> adj = searchable->getAllPossibleStates(current); //extract neighbors.
+            for (State<T>* son : adj) {
+                if (this->visited[son] == WHITE ) {
+                    //set the node as handled and set the path.
+                    son->setCameFrom(current);
+                    this->visited[son]=GRAY;
+                    this->open1.push(son);
+                }
+            }
+        }
+        this->evaluatedNodes = 0;
+        return ("-1"); // in case our node was not found.
+    }
+    int getNumberOfNodesEvaluated(){ return this->evaluatedNodes; };
 };
 
-Graph::Graph(int V)
-{
-    this->V = V;
-    adj = new list<int>[V];
-}
-
-void Graph::addEdge(int v, int w)
-{
-    adj[v].push_back(w); // Add w to v’s list.
-}
-
-void Graph::DFSUtil(int v, bool visited[])
-{
-    // Mark the current node as visited and
-    // print it
-    visited[v] = true;
-    cout << v << " ";
-
-    // Recur for all the vertices adjacent
-    // to this vertex
-    list<int>::iterator i;
-    for (i = adj[v].begin(); i != adj[v].end(); ++i)
-        if (!visited[*i])
-            DFSUtil(*i, visited);
-}
-
-// DFS traversal of the vertices reachable from v.
-// It uses recursive DFSUtil()
-void Graph::DFS(int v)
-{
-    // Mark all the vertices as not visited
-    bool *visited = new bool[V];
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
-
-    // Call the recursive helper function
-    // to print DFS traversal
-    DFSUtil(v, visited);
-}
-int main()
-{
-    // Create a graph given in the above diagram
-    Graph g(4);
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 2);
-    g.addEdge(2, 0);
-    g.addEdge(2, 3);
-    g.addEdge(3, 3);
-
-    cout << "Following is Depth First Traversal"
-            " (starting from vertex 2) \n";
-    g.DFS(2);
-
-    return 0;
-}
-#endif //SECONDSTONE_DFS_H
+#endif

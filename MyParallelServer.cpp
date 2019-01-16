@@ -13,7 +13,7 @@
 #include<netinet/in.h>
 #include<string.h>
 #include <arpa/inet.h>
-#include <fcntl.h> // for open
+#include <fcntl.h> // for open1
 #include <unistd.h> // for close
 #include<pthread.h>
 extern bool stop;
@@ -67,7 +67,7 @@ void MasterOfThreads (int port, ClientHandler *c){
 
 
             timeval timeout;
-            timeout.tv_sec = 100;
+            timeout.tv_sec = 20;
             timeout.tv_usec = 0;
             setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
 
@@ -118,4 +118,5 @@ void MyParallelServer::open (int port, ClientHandler * c){
 void MyParallelServer::stop(){
     ::stop = true;
     close(serverSocketEX);
+
 };

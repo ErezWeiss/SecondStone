@@ -14,7 +14,13 @@
 #include "MyClientHandler.h"
 #include "SearcherAdapter.h"
 #include "BestFirstSearch.h"
+#include "Astar.h"
+#include "DFS.h"
+#include "BFS.h"
 
+MyClientHandler::MyClientHandler(CacheManager<string, string> *cacheManager){
+    this->cacheManager=cacheManager;
+}
 
 void MyClientHandler::handleClient(int new_socket) {
     std::vector<std::string> lines;
@@ -33,16 +39,32 @@ void MyClientHandler::handleClient(int new_socket) {
         lines.push_back(buffer);
         cout<< "got input from client from socket number: "<< new_socket<< endl << str<<endl<<"----"<<endl;
     }
-
-    auto mySearcher = new BestFirstSearch<Point, string>();
+    auto mySearcher = new Astar<Point, string>();
+//    auto mySearcher = new BestFirstSearch<Point, string>();
     auto searcherAdapter = new SearcherAdapter<Searchable<Point>, std::string, Point>(mySearcher, lines);
     this->solver = searcherAdapter;
     Searchable<Point> *searchable = searcherAdapter->getSearchableMatrix();
-    std::string returnAnswer = solver->Solve(searchable);
+
+    std::string problemForCheck="";
+    for(auto const& value: lines) {
+        problemForCheck+=value;
+        problemForCheck+='$';
+    }
+    problemForCheck.erase(std::remove(problemForCheck.begin(), problemForCheck.end(), '\n'), problemForCheck.end());
+
+    std::string returnAnswer;
+    bool ifExist=this->cacheManager->ifExist(problemForCheck);
+    if(ifExist){
+        cout<<"exist!#################################";
+        returnAnswer=this->cacheManager->getSolution(problemForCheck);
+    } else{
+        returnAnswer  = solver->Solve(searchable);
+        this->cacheManager->saveSolution(problemForCheck,returnAnswer);
+    }
     send(new_socket, returnAnswer.c_str(), returnAnswer.size(), 0);
 }
 
 
 ClientHandler* MyClientHandler::DuplicateCH(){
-    return new MyClientHandler;
+    return new MyClientHandler(this->cacheManager);
 }

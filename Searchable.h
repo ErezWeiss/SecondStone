@@ -15,5 +15,6 @@ public:
     virtual State<T>* getGoalState() = 0;
     virtual std::list<State<T>*> getAllPossibleStates(State<T>* s) = 0;
     virtual std::vector<std::vector<State<T>*>> getVector()=0;
+//    virtual std::string ToString()=0;
 };
 #endif //SECONDSTONE_SEARCHABLE_H

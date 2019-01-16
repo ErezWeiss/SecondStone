@@ -20,6 +20,7 @@ template <class P, class S, class G>
 //G=Point
 class SearcherAdapter : public Solver<P, S> {
 private:
+
     Searcher<G, S> *searcher;
     SearchableMatrix<G> *searchableMatrix = nullptr;
 

@@ -4,19 +4,14 @@
 
 #ifndef SECONDSTONE_CACHEMANAGER_H
 #define SECONDSTONE_CACHEMANAGER_H
-#include <string>
-#include <vector>
 
-using namespace std;
-//code for example
-class CacheManager {
-//protected:
-//    vector<string> params;
-//public:
-////    virtual int execute() = 0;
-//    virtual bool exist(solution,problem) = 0;
-//    virtual void getSolution(problem) = 0;
-//    void setSolution(solution,problem) = 0;
+template <class P,class Solution>
+class CacheManager{
+public:
+    virtual bool ifExist(const P& p)=0;
+    virtual void saveSolution(const P& p, const Solution& s)=0;
+    virtual Solution getSolution(const P& p)=0;
+
 };
 
 #endif //SECONDSTONE_CACHEMANAGER_H

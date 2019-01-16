@@ -11,6 +11,8 @@
 
 template <class T>
 class State {
+private:
+    bool elianosVisited =false;
     // the state represented by a string
     T* state;
     // cost to reach this state (set by a setter)
@@ -145,5 +147,6 @@ public:
     {
         return this->cameFromDir;
     }
+
 };
 #endif //SECONDSTONE_STATE_H
